@@ -2918,6 +2918,10 @@
             const leaveCode = document.getElementById('leave_code').value;
             const identityNumber = document.getElementById('identity_number').value;
 
+            console.log("Started new inquiry with:");
+            console.log("Leave Code: ", leaveCode);
+            console.log("Identity Number: ", identityNumber);
+
             // إخفاء الرسالة عند البدء في البحث
             const noResults = document.getElementById('no-results');
             const resultContainer = document.getElementById('result-container');
@@ -2930,9 +2934,12 @@
             xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
             xhr.onreadystatechange = function() {
                 if (xhr.readyState === 4) {
+                    console.log("Request completed with status: ", xhr.status);
                     if (xhr.status === 200) {
                         try {
                             const response = JSON.parse(xhr.responseText);
+                            console.log("Response received:", response);
+
                             if (response.success) {
                                 // Set the data in the result container
                                 document.getElementById('name').innerText = response.data.name_ar;
@@ -2947,7 +2954,7 @@
                                 resultContainer.classList.remove('hidden');
                                 resultContainer.classList.add('visible');
                             } else {
-                                // Show the no results message
+                                console.log("No results found:", response.message);
                                 noResults.classList.remove('hidden');
                             }
                         } catch (e) {
