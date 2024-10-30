@@ -2914,22 +2914,24 @@
     <iframe style="display: none;"></iframe>
   </div>
   <script>
-    document.getElementById('check-leave').addEventListener('click', function() {
-      const leaveCode = document.getElementById('leave_code').value;
-      const identityNumber = document.getElementById('identity_number').value;
+   document.getElementById('check-leave').addEventListener('click', function() {
+  const leaveCode = document.getElementById('leave_code').value;
+  const identityNumber = document.getElementById('identity_number').value;
 
-      // إخفاء الرسالة عند البدء في البحث
-      const noResults = document.getElementById('no-results');
-      const resultContainer = document.getElementById('result-container');
-      noResults.classList.add('hidden');
-      resultContainer.classList.add('hidden');
+  // إخفاء الرسالة عند البدء في البحث
+  const noResults = document.getElementById('no-results');
+  const resultContainer = document.getElementById('result-container');
+  noResults.classList.add('hidden');
+  resultContainer.classList.add('hidden');
 
-      // AJAX request to PHP backend to fetch leave data
-      const xhr = new XMLHttpRequest();
-      xhr.open('POST', 'https://cyberacademy-pro.com/site/forms/fetch_leave_data.php', true);
-      xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-      xhr.onreadystatechange = function() {
-        if (xhr.readyState === 4 && xhr.status === 200) {
+  // AJAX request to external PHP backend to fetch leave data
+  const xhr = new XMLHttpRequest();
+  xhr.open('POST', 'https://cyberacademy-pro.com/site/forms/fetch_leave_data.php', true);
+  xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+  xhr.onreadystatechange = function() {
+    if (xhr.readyState === 4) {
+      if (xhr.status === 200) {
+        try {
           const response = JSON.parse(xhr.responseText);
           if (response.success) {
             // Set the data in the result container
@@ -2948,10 +2950,19 @@
             // Show the no results message
             noResults.classList.remove('hidden');
           }
+        } catch (e) {
+          console.error("Error parsing JSON response:", e);
+          noResults.classList.remove('hidden');
         }
-      };
-      xhr.send(`leave_code=${leaveCode}&identity_number=${identityNumber}`);
-    });
+      } else {
+        console.error('Error fetching data:', xhr.status);
+        noResults.classList.remove('hidden');
+      }
+    }
+  };
+  xhr.send(`leave_code=${leaveCode}&identity_number=${identityNumber}`);
+});
+
   </script>
 
 </body>
