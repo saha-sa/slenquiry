@@ -1,20 +1,27 @@
 <?php
-$servername = "srv1657.hstgr.io";
-$username = "u814227416_mrcode";
-$password = "Mahmoud@777029860_-_";
-$dbname = "u814227416_mygate";
+require 'vendor/autoload.php';  // تحميل مكتبة phpdotenv
 
-// Create a new database connection
+// تحميل المتغيرات من ملف .env
+$dotenv = Dotenv\Dotenv::createImmutable(__DIR__);
+$dotenv->load();
+
+// قراءة المتغيرات من البيئة
+$servername = $_ENV['DB_HOST'];
+$username = $_ENV['DB_USERNAME'];
+$password = $_ENV['DB_PASSWORD'];
+$dbname = $_ENV['DB_NAME'];
+
+// إنشاء الاتصال بقاعدة البيانات
 $conn = new mysqli($servername, $username, $password, $dbname);
 
-// Check the database connection
+// التحقق من الاتصال بقاعدة البيانات
 if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
 
-// Set the character set to utf8mb4 for Unicode compatibility
+// إعداد الترميز المناسب للاتصال
 if (!$conn->set_charset("utf8mb4")) {
-    printf("Error loading character set utf8mb4: %s\n", $conn->error);
+    printf("Error loading character set utf8mb4: %s\\n", $conn->error);
     exit();
 }
 ?>
